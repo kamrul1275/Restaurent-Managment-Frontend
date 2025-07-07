@@ -1,0 +1,173 @@
+body {
+  background-color: #f7f9fc;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+.sidebar {
+  background: #2c3e50;
+  min-height: 100vh;
+  color: white;
+}
+
+.sidebar .nav-link {
+  color: #ecf0f1;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: #134e89;
+  color: white;
+}
+
+.card-menu-item {
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-menu-item img {
+  width: 100px;
+  height: 90px;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.card-menu-item:hover {
+  background-color: #67c905fa;
+  cursor: pointer;
+}
+
+.order-summary {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.btn-checkout {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-clear {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.navbar {
+  background-color: #2c3e50 !important;
+}
+
+
+
+
+/* sales report css */
+
+
+.report-container {
+  background-color: #fff;
+}
+
+.report-header h3 {
+  font-weight: bold;
+}
+
+.btn-export {
+  background-color: #134e89;
+  color: white;
+}
+
+.summary-card {
+  background: #f1f4f8;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.summary-card .value {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.section-title {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* order history */
+
+        .history-box {
+          max-width: 1227px;
+          margin: 30px auto;
+          background: #ffffff;
+          padding: 15px;
+          border-radius: 7px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          font-family: 'Segoe UI', sans-serif;
+        }
+        h1 {
+          text-align: center;
+          color: #2c3e50;
+          margin-bottom: 20px;
+          font-size: 24px;
+        }
+        .filters {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-bottom: 20px;
+          gap: 10px;
+        }
+        .filters input, .filters select {
+          padding: 8px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          min-width: 150px;
+        }
+        .history-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+        }
+        .history-table th, .history-table td {
+          border: 1px solid #e0e0e0;
+          padding: 10px 8px;
+          text-align: center;
+        }
+        .history-table th {
+          background: #2196f3;
+          color: #fff;
+          font-weight: 700;
+        }
+        .history-table tr:nth-child(even) {
+          background: #f9f9f9;
+        }
+        .actions button {
+          margin: 2px;
+          padding: 5px 10px;
+          font-size: 12px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .btn-view {
+          background-color: #4caf50;
+          color: white;
+        }
+        .btn-delete {
+          background-color: #f44336;
+          color: white;
+        }
