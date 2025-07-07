@@ -289,35 +289,33 @@ export default function Dashboard({ setIsAuthenticated }) {
                 </div>
 
                 {/* Menu Items */}
-                <div className="row">
-                  {filteredItems.map((item) => (
-                    <div className="col-md-4 mb-3" key={item.id}>
-                      <div className="card card-menu-item p-3 text-center">
-                        <img
-                          src={fullImagePath(item.image)}
-                          className="menu-image mb-2"
-                          alt={item.name}
-                          style={{ height: "120px", objectFit: "cover" }}
-                        />
-                        <div className="card-content">
-                          <h6>{item.name}</h6>
-                          <p className="text-muted mb-1">
-                            {parseFloat(item.price).toFixed(2)} taka
-                          </p>
-                          <small className="text-muted">
-                            {item.menu_category?.name}
-                          </small>
-                        </div>
-                        <button
-                          className="btn btn-sm btn-success text-white mt-2"
-                          onClick={() => addToOrder(item)}
-                        >
-                          <i className="bi bi-plus-circle me-1"></i> Add
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+<div className="row">
+  {filteredItems.map((item) => (
+    <div className="col-md-4 mb-3" key={item.id}>
+      <div className="card card-menu-item text-center h-100">
+        <img
+          src={fullImagePath(item.image)}
+          className="menu-image"
+          alt={item.name}
+        />
+        <div className="card-content">
+          <h6 className="mb-1">{item.name}</h6>
+          <p className="text-muted mb-1">
+            {parseFloat(item.price).toFixed(2)} taka
+          </p>
+          <small className="text-muted">{item.menu_category?.name}</small>
+        </div>
+        <button
+          className="btn btn-sm btn-success text-white mt-3"
+          onClick={() => addToOrder(item)}
+        >
+          <i className="bi bi-plus-circle me-1"></i> Add
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
               </div>
 
               {/* Order Summary */}

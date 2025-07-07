@@ -27,7 +27,42 @@ body {
   color: white;
 }
 
+
 .card-menu-item {
+  height: 100%; /* Let content define height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-menu-item img {
+  width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.card-menu-item:hover {
+  background-color: #67c905fa;
+  cursor: pointer;
+}
+
+.card-menu-item .card-content {
+  flex-grow: 1;
+}
+
+.card-menu-item button {
+  margin-top: auto;
+  width: 100%;
+}
+
+
+
+/* .card-menu-item {
   height: 210px;
   display: flex;
   flex-direction: column;
@@ -39,7 +74,7 @@ body {
   height: 90px;
   object-fit: cover;
   margin: 0 auto;
-}
+} */
 
 .card-menu-item:hover {
   background-color: #67c905fa;
