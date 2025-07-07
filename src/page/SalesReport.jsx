@@ -1,132 +1,117 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import React from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://restaurent-pos.test";
 
 export default function SalesReport() {
+  const [overview, setOverview] = useState(null);
+  const [today, setToday] = useState(null);
+  const [monthly, setMonthly] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/api/report_overview`)
+      .then(res => setOverview(res.data))
+      .catch(err => console.error("Overview fetch error", err));
+
+    axios.get(`${API_BASE_URL}/api/today_sales`)
+      .then(res => setToday(res.data))
+      .catch(err => console.error("Today sales fetch error", err));
+
+    axios.get(`${API_BASE_URL}/api/monthly_Sales`)
+      .then(res => setMonthly(res.data.monthly_sales || []))
+      .catch(err => console.error("Monthly sales fetch error", err));
+  }, []);
+
+  if (!overview || !today || !monthly) return <p className="text-center mt-5">Loading reports...</p>;
+
   return (
-    <div className="col-md-10 report-container px-4 py-3">
-      {/* Page Header */}
-      <div className="report-header d-flex justify-content-between align-items-center mb-4">
-        <h3>Reports Overview</h3>
-        <button className="btn btn-export">📥 Export All</button>
+    <div className="container-fluid px-4 py-3">
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold">📊 Reports Overview</h2>
+        <button className="btn btn-outline-primary">📥 Export Report</button>
       </div>
 
-      {/* Total Sales Overview */}
-      <div className="row g-4 mb-4">
-        {[
-          { title: 'Total Sales', value: '$12,420.00' },
-          { title: 'Total Orders', value: '967', className: 'text-primary' },
-          { title: 'Average Order', value: '$12.85' },
-          { title: 'Top Item', value: 'Chicken Burger', className: 'text-dark' },
-        ].map((item, index) => (
-          <div className="col-md-3" key={index}>
-            <div className="summary-card">
-              <h6>{item.title}</h6>
-              <div className={`value ${item.className || ''}`}>{item.value}</div>
+      {/* Overview Cards */}
+      <div className="row g-4 mb-5">
+        <div className="col-md-3">
+          <div className="card border-start border-success border-4 shadow-sm">
+            <div className="card-body">
+              <h6 className="text-muted">Total Sales</h6>
+              <h4 className="text-success fw-bold">{parseFloat(overview.totalSales).toFixed(2)} ৳</h4>
             </div>
           </div>
-        ))}
+        </div>
+        <div className="col-md-3">
+          <div className="card border-start border-primary border-4 shadow-sm">
+            <div className="card-body">
+              <h6 className="text-muted">Total Orders</h6>
+              <h4 className="text-primary fw-bold">{overview.totalOrder}</h4>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="card border-start border-warning border-4 shadow-sm">
+            <div className="card-body">
+              <h6 className="text-muted">Average Order</h6>
+              <h4 className="text-warning fw-bold">{parseFloat(overview.averageOrder).toFixed(2)} ৳</h4>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="card border-start border-dark border-4 shadow-sm">
+            <div className="card-body">
+              <h6 className="text-muted">Top Item</h6>
+              <h5 className="text-dark fw-bold">
+                {overview.topItem?.name || 'N/A'} <small className="text-muted">({overview.topItem?.total_qty || 0})</small>
+              </h5>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Daily Sales Report */}
-      <h4 className="section-title">📅 Daily Sales Report</h4>
-      <div className="report-summary row text-center mb-4">
+      {/* Today Sales */}
+      <h4 className="text-secondary mb-3">📅 Today’s Summary</h4>
+      <div className="row text-center mb-5">
         <div className="col-md-4">
-          <h5>Today's Sales</h5>
-          <p className="fs-4 text-success">$180.00</p>
+          <div className="p-3 bg-light rounded shadow-sm">
+            <h6>Today’s Sales</h6>
+            <h4 className="text-success">{parseFloat(today.today_sales).toFixed(2)} ৳</h4>
+          </div>
         </div>
         <div className="col-md-4">
-          <h5>Today's Orders</h5>
-          <p className="fs-4 text-primary">18</p>
+          <div className="p-3 bg-light rounded shadow-sm">
+            <h6>Today’s Orders</h6>
+            <h4 className="text-primary">{today.today_orders}</h4>
+          </div>
         </div>
         <div className="col-md-4">
-          <h5>Top Item</h5>
-          <p className="fs-5">French Fries</p>
+          <div className="p-3 bg-light rounded shadow-sm">
+            <h6>Top Item Today</h6>
+            <h5>{today.top_item} ({today.top_item_qty})</h5>
+          </div>
         </div>
       </div>
 
-      <div className="table-responsive mb-5">
-        <table className="table report-table table-bordered">
-          <thead>
+      {/* Monthly Sales Table */}
+      <h4 className="text-secondary mb-3">📆 Monthly Sales Report</h4>
+      <div className="table-responsive shadow-sm rounded">
+        <table className="table table-bordered table-striped">
+          <thead className="table-dark text-center">
             <tr>
-              <th>Time</th>
-              <th>Invoice #</th>
-              <th>Order Type</th>
-              <th>Amount</th>
-              <th>Paid</th>
-              <th>Change</th>
+              <th>Month</th>
+              <th>Total Orders</th>
+              <th>Total Sales (৳)</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>11:20 AM</td>
-              <td>INV-2001</td>
-              <td>Dine In</td>
-              <td>$25.00</td>
-              <td>$30.00</td>
-              <td>$5.00</td>
-            </tr>
-            <tr>
-              <td>01:45 PM</td>
-              <td>INV-2002</td>
-              <td>Takeaway</td>
-              <td>$15.00</td>
-              <td>$20.00</td>
-              <td>$5.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Monthly Sales Report */}
-      <h4 className="section-title">📊 Monthly Sales Report</h4>
-      <div className="report-summary row text-center mb-4">
-        <div className="col-md-4">
-          <h5>This Month's Sales</h5>
-          <p className="fs-4 text-success">$4,750.00</p>
-        </div>
-        <div className="col-md-4">
-          <h5>Total Orders</h5>
-          <p className="fs-4 text-primary">362</p>
-        </div>
-        <div className="col-md-4">
-          <h5>Best Selling Item</h5>
-          <p className="fs-5">Chicken Burger</p>
-        </div>
-      </div>
-
-      <div className="table-responsive mb-5">
-        <table className="table report-table table-bordered">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Orders</th>
-              <th>Total Sales</th>
-              <th>Paid</th>
-              <th>Change</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2025-06-24</td>
-              <td>45</td>
-              <td>$500.00</td>
-              <td>$520.00</td>
-              <td>$20.00</td>
-            </tr>
-            <tr>
-              <td>2025-06-23</td>
-              <td>38</td>
-              <td>$420.00</td>
-              <td>$430.00</td>
-              <td>$10.00</td>
-            </tr>
-            <tr>
-              <td>2025-06-22</td>
-              <td>62</td>
-              <td>$330.00</td>
-              <td>$350.00</td>
-              <td>$20.00</td>
-            </tr>
+          <tbody className="text-center">
+            {monthly.map((month, i) => (
+              <tr key={i}>
+                <td>{month.month}</td>
+                <td>{month.total_orders}</td>
+                <td>{parseFloat(month.total_sales).toFixed(2)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -1,42 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://restaurent-pos.test";
 
 export default function OrderHistory() {
+  const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState('');
   const [date, setDate] = useState('');
   const [orderType, setOrderType] = useState('');
 
-  // Dummy data for orders
-  const orders = [
-    {
-      invoice: 'INV-1001',
-      date: '2025-06-24',
-      time: '03:30 PM',
-      orderType: 'Dine In',
-      tableNo: '5',
-      total: 12.0,
-      paid: 20.0,
-      change: 8.0,
-    },
-    {
-      invoice: 'INV-1002',
-      date: '2025-06-23',
-      time: '01:10 PM',
-      orderType: 'Takeaway',
-      tableNo: 'N/A',
-      total: 8.5,
-      paid: 10.0,
-      change: 1.5,
-    },
-    // add more dummy orders here if needed
-  ];
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/api/orders`)
+      .then((res) => {
+        setOrders(res.data.data || res.data); // Adjust depending on your API structure
+      })
+      .catch((err) => {
+        console.error('Failed to fetch orders:', err);
+      });
+  }, []);
 
-  // Filter orders based on search inputs
   const filteredOrders = orders.filter((order) => {
     const searchLower = search.toLowerCase();
-    const invoiceMatch = order.invoice.toLowerCase().includes(searchLower);
-    const tableMatch = order.tableNo.toLowerCase().includes(searchLower);
-    const dateMatch = !date || order.date === date;
-    const typeMatch = !orderType || order.orderType === orderType;
+    const invoiceMatch = order.order_number?.toLowerCase().includes(searchLower);
+    const tableMatch = (order.table_no || '').toLowerCase().includes(searchLower);
+    const dateMatch = !date || order.order_date?.startsWith(date);
+    const typeMatch = !orderType || order.order_type === orderType;
 
     return (invoiceMatch || tableMatch) && dateMatch && typeMatch;
   });
@@ -82,25 +70,25 @@ export default function OrderHistory() {
         <tbody>
           {filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (
-              <tr key={order.invoice}>
-                <td>{order.invoice}</td>
-                <td>{order.date}</td>
-                <td>{order.time}</td>
-                <td>{order.orderType}</td>
-                <td>{order.tableNo}</td>
-                <td>${order.total.toFixed(2)}</td>
-                <td>${order.paid.toFixed(2)}</td>
-                <td>${order.change.toFixed(2)}</td>
+              <tr key={order.id}>
+                <td>{order.order_number}</td>
+                <td>{order.order_date?.split('T')[0]}</td>
+                <td>{new Date(order.order_date).toLocaleTimeString()}</td>
+                <td>{order.order_type}</td>
+                <td>{order.table_no || 'N/A'}</td>
+                <td>{parseFloat(order.total_amount).toFixed(2)} Taka</td>
+                <td>{parseFloat(order.total_amount).toFixed(2)} Taka</td>
+                <td>0.00</td>
                 <td className="actions">
                   <button
                     className="btn-view"
-                    onClick={() => alert(`View invoice ${order.invoice}`)}
+                    onClick={() => window.open(`/invoice/${order.id}`, '_blank')}
                   >
                     View
                   </button>
                   <button
                     className="btn-delete"
-                    onClick={() => alert(`Delete invoice ${order.invoice}`)}
+                    onClick={() => alert(`Delete order ${order.order_number}`)}
                   >
                     Delete
                   </button>
@@ -116,8 +104,6 @@ export default function OrderHistory() {
           )}
         </tbody>
       </table>
-
-
     </div>
   );
 }
