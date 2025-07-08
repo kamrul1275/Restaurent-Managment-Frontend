@@ -206,3 +206,13 @@ body {
           background-color: #f44336;
           color: white;
         }
+
+
+
+        /* sales report */
+
+.report-card:hover {
+  transform: translateY(-4px);
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}

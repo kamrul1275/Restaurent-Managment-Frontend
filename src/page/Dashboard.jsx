@@ -25,6 +25,8 @@ export default function Dashboard({ setIsAuthenticated }) {
   const [discount, setDiscount] = useState(0);
   const deliveryCharge = 0;
 
+
+
   // ✅ Declare here only once
   const subtotal = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -250,7 +252,7 @@ export default function Dashboard({ setIsAuthenticated }) {
             <div className="row">
               {/* Order Types */}
               <div className="col-md-8">
-                <div className="btn-group mb-3" role="group">
+                {/* <div className="btn-group mb-3" role="group">
                   <button
                     type="button"
                     className="btn btn-outline-primary active"
@@ -263,7 +265,7 @@ export default function Dashboard({ setIsAuthenticated }) {
                   <button type="button" className="btn btn-outline-primary">
                     Delivery
                   </button>
-                </div>
+                </div> */}
 
                 {/* Category Filters */}
                 <div className="menu-category mb-3">
