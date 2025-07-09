@@ -27,6 +27,9 @@ export default function Dashboard({ setIsAuthenticated }) {
 
 
 
+
+
+
   // ✅ Declare here only once
   const subtotal = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -156,10 +159,57 @@ export default function Dashboard({ setIsAuthenticated }) {
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
+  fetchMenuItems();
+
+  const interval = setInterval(fetchMenuItems, 1000); // Every 10 seconds
+
+  return () => clearInterval(interval); // Cleanup on unmount
+}, []);
+
+
+
+
+
+
+
   const filteredItems =
     activeCategory === "All"
       ? menuItems
       : menuItems.filter((item) => item.menu_category?.name === activeCategory);
+
+
+
+
+
+
+
+
+
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 6;
+
+const indexOfLastItem = currentPage * itemsPerPage;
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+const paginatedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+
+
+
+
+
 
   useEffect(() => {
     fetchCategories();
@@ -290,9 +340,9 @@ export default function Dashboard({ setIsAuthenticated }) {
                   ))}
                 </div>
 
-                {/* Menu Items */}
+{/* Menu Items */}
 <div className="row">
-  {filteredItems.map((item) => (
+  {paginatedItems.map((item) => (
     <div className="col-md-4 mb-3" key={item.id}>
       <div className="card card-menu-item text-center h-100">
         <img
@@ -317,6 +367,27 @@ export default function Dashboard({ setIsAuthenticated }) {
     </div>
   ))}
 </div>
+
+{/* Pagination Controls */}
+{filteredItems.length > itemsPerPage && (
+  <div className="d-flex justify-content-between align-items-center mt-3">
+    <button
+      className="btn btn-outline-secondary btn-sm"
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+    >
+      ← Previous
+    </button>
+    <span>Page {currentPage} of {totalPages}</span>
+    <button
+      className="btn btn-outline-secondary btn-sm"
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+    >
+      Next →
+    </button>
+  </div>
+)}
 
               </div>
 

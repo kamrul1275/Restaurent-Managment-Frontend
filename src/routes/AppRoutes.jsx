@@ -28,36 +28,39 @@ const AppRoutes = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {!isAuthenticated ? (
-          <>
-            <Route
-              path="/"
-              element={<Login setIsAuthenticated={setIsAuthenticated} />}
-            />
-            <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </>
-        ) : (
-          <Route
-            path="/dashboard"
-            element={<Dashboard setIsAuthenticated={setIsAuthenticated} />}
-          >
-            {/* <Route path="/dashboard" element={<Dashboard setIsAuthenticated={setIsAuthenticated} />}> */}
+<BrowserRouter>
+  <Routes>
+    {!isAuthenticated ? (
+      <>
+        <Route
+          path="/"
+          element={<Login setIsAuthenticated={setIsAuthenticated} />}
+        />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </>
+    ) : (
+      <>
+        {/* ✅ Redirect root to /dashboard when logged in */}
+        <Route path="/" element={<Navigate to="/dashboard" />} />
 
-            <Route path="orders" element={<Orders />} />
-            <Route path="orders_history" element={<OrderHistory />} />
-            <Route path="menu-items" element={<MenuItems />} />
-            <Route path="categories" element={<Categories />} />
-            {/* <Route path="invoice" element={<Invoice />} /> */}
-            <Route path="invoice/:orderId" element={<InvoicePage />} />
-            <Route path="sales_report" element={<SalesReport />} />
-            <Route path="*" element={<Navigate to="/dashboard/orders" />} />
-          </Route>
-        )}
-      </Routes>
-    </BrowserRouter>
+        <Route
+          path="/dashboard"
+          element={<Dashboard setIsAuthenticated={setIsAuthenticated} />}
+        >
+          <Route path="orders" element={<Orders />} />
+          <Route path="orders_history" element={<OrderHistory />} />
+          <Route path="menu-items" element={<MenuItems />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="invoice/:orderId" element={<InvoicePage />} />
+          <Route path="sales_report" element={<SalesReport />} />
+          <Route path="*" element={<Navigate to="/dashboard/orders" />} />
+        </Route>
+      </>
+    )}
+  </Routes>
+</BrowserRouter>
+
   );
 };
 

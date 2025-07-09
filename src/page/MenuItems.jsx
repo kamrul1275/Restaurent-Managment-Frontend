@@ -21,6 +21,14 @@ export default function MenuItems() {
 
   const imageInputRef = useRef(null);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedItems = menuItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(menuItems.length / itemsPerPage);
+
   useEffect(() => {
     fetchCategories();
     fetchMenuItems();
@@ -43,7 +51,10 @@ export default function MenuItems() {
   function fetchMenuItems() {
     axios
       .get(`${API_BASE_URL}/api/menu_items`)
-      .then((res) => setMenuItems(res.data.data))
+      .then((res) => {
+        setMenuItems(res.data.data);
+        setCurrentPage(1); // reset to first page on load
+      })
       .catch((err) => console.error("Error fetching menu items:", err));
   }
 
@@ -142,7 +153,7 @@ export default function MenuItems() {
         </div>
       )}
 
-      {/* Menu Items Table */}
+      {/* Table */}
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead className="table-dark">
@@ -156,7 +167,7 @@ export default function MenuItems() {
             </tr>
           </thead>
           <tbody>
-            {menuItems.map((item) => (
+            {paginatedItems.map((item) => (
               <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.menu_category?.name}</td>
@@ -183,6 +194,42 @@ export default function MenuItems() {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        {menuItems.length > itemsPerPage && (
+          <nav className="d-flex justify-content-center mt-3">
+            <ul className="pagination pagination-sm">
+              <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                >
+                  «
+                </button>
+              </li>
+
+              {Array.from({ length: totalPages }, (_, i) => (
+                <li
+                  key={i}
+                  className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                >
+                  <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                    {i + 1}
+                  </button>
+                </li>
+              ))}
+
+              <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                  »
+                </button>
+              </li>
+            </ul>
+          </nav>
+        )}
       </div>
 
       {/* Modal */}
